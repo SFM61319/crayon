@@ -28,10 +28,10 @@ format: (_require "clang-format")
 # Configure the build directory using CMake presets
 config preset="dev" *args: (_require "cmake")
   cmake --preset {{ preset }} {{ args }}
+  ln -sf build/{{ preset }}/compile_commands.json compile_commands.json
 
 # One-time setup: validates tools, configures CMake, and links compile_commands.json
 setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clang-tidy" "run-clang-tidy") (config preset args)
-  ln -sf build/{{ preset }}/compile_commands.json compile_commands.json
 
 # Run `clang-tidy` static analysis on project sources
 lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (config preset)
