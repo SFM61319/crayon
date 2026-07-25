@@ -5,6 +5,8 @@
 
 #include <string>
 
+namespace crayon {
 /// @brief Hello, Crayon!
 /// @return "Hello, Crayon!"
 std::string hello_crayon();
+} // namespace crayon

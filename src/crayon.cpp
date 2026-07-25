@@ -5,4 +5,4 @@
 
 #include <crayon/crayon.hpp>
 
-std::string hello_crayon() { return "Hello, Crayon!"; }
+std::string crayon::hello_crayon() { return "Hello, Crayon!"; }
