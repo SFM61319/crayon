@@ -35,7 +35,7 @@ setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clan
 
 # Run `clang-tidy` static analysis on project sources
 lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (config preset)
-  run-clang-tidy -p build/{{ preset }} -warnings-as-errors='*' -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
+  run-clang-tidy -p=build/{{ preset }} -warnings-as-errors='*' -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
 
 # Build the project (library, tests, examples)
 build preset="dev" *args: (_require "cmake" "ninja") (config preset)
