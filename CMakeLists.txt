@@ -129,3 +129,15 @@ endif()
 if(CRAYON_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
+
+# ==============================================================================
+# PACKAGING (CPack)
+# ==============================================================================
+
+if(PROJECT_IS_TOP_LEVEL)
+  set(CPACK_PACKAGE_VENDOR "Avinash Maddikonda")
+  set(CPACK_PACKAGE_CONTACT "Avinash Maddikonda <45308169+SFM61319@users.noreply.github.com>")
+  set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+  include(CPack)
+endif()
