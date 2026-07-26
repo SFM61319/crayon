@@ -131,5 +131,15 @@
         "stopOnFailure": true
       }
     }
+  ],
+  "packagePresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    }
   ]
 }
