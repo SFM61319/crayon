@@ -55,6 +55,7 @@ check preset="dev": format (lint preset) (test preset)
 # Clean build artifacts using the active preset's build target
 clean-target preset="dev" *args: (build preset "--target" "clean" args)
 
-# Clean build artifacts
+# Clean config and build artifacts
 clean:
+  rm -f compile_commands.json
   rm -rf build/
