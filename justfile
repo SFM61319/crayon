@@ -45,7 +45,7 @@ build preset="dev" *args: (_require "cmake" "ninja") (config preset)
 test preset="dev" *args: (_require "ctest") (build preset)
   ctest --preset {{ preset }} {{ args }}
 
-# Package project via CTest
+# Package project via CPack
 pack preset="dev" *args: (_require "cpack") (build preset)
   cpack --preset {{ preset }} {{ args }}
 
