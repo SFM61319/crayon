@@ -19,47 +19,47 @@ _require *tools:
 
 # List all available recipes
 help:
-  @{{ just_executable() }} --list
+    @{{ just_executable() }} --list
 
 # Format code using `clang-format` (parallelized across CPU cores)
 format: (_require "clang-format")
-  find include/ src/ tests/ examples/ \( -name '*.hpp' -o -name '*.cpp' \) -print0 | xargs -0 -P 0 -n 1 clang-format -i
+    find include/ src/ tests/ examples/ \( -name '*.hpp' -o -name '*.cpp' \) -print0 | xargs -0 -P 0 -n 1 clang-format -i
 
 # Configure the build directory using CMake presets
 config preset="dev" *args: (_require "cmake")
-  cmake --preset {{ preset }} {{ args }}
-  ln -sf build/{{ preset }}/compile_commands.json compile_commands.json
+    cmake --preset {{ preset }} {{ args }}
+    ln -sf build/{{ preset }}/compile_commands.json compile_commands.json
 
 # One-time setup: validates tools, configures CMake, and links compile_commands.json
 setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clang-tidy" "run-clang-tidy" "doxygen") (config preset args)
 
 # Run `clang-tidy` static analysis on project sources
 lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (config preset)
-  run-clang-tidy -p=build/{{ preset }} -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
+    run-clang-tidy -p=build/{{ preset }} -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
 
 # Build the project (library, tests, examples)
 build preset="dev" *args: (_require "cmake" "ninja") (config preset)
-  cmake --build --preset {{ preset }} {{ args }}
+    cmake --build --preset {{ preset }} {{ args }}
 
 # Run unit tests via CTest
 test preset="dev" *args: (_require "ctest") (build preset)
-  ctest --preset {{ preset }} {{ args }}
+    ctest --preset {{ preset }} {{ args }}
 
 # Package project via CPack
 pack preset="dev" *args: (_require "cpack") (build preset)
-  cpack --preset {{ preset }} {{ args }}
+    cpack --preset {{ preset }} {{ args }}
 
 # Run a complete local check (Format, Lint, Test)
 check preset="dev": format (lint preset) (test preset)
 
 # Generate documentation using `doxygen`
 docs *args: (_require "doxygen")
-  doxygen {{ args }}
+    doxygen {{ args }}
 
 # Clean build artifacts using the active preset's build target
 clean-target preset="dev" *args: (build preset "--target" "clean" args)
 
 # Clean config and build artifacts
 clean:
-  rm -f compile_commands.json
-  rm -rf build/
+    rm -f compile_commands.json
+    rm -rf build/
