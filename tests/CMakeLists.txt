@@ -19,6 +19,7 @@ FetchContent_MakeAvailable(googletest)
 # Create your test executable
 add_executable(crayon_tests
   test_crayon.cpp
+  test_thread_pool.cpp
 )
 
 # Link against your library and GoogleTest's main wrapper

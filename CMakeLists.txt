@@ -38,12 +38,13 @@ add_library(crayon::crayon ALIAS crayon)
 
 target_sources(crayon
   PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/crayon.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/thread_pool.cpp"
   PUBLIC
     FILE_SET HEADERS
     BASE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include"
     FILES
       "${CMAKE_CURRENT_SOURCE_DIR}/include/crayon/crayon.hpp"
+      "${CMAKE_CURRENT_SOURCE_DIR}/include/crayon/thread_pool.hpp"
 )
 
 # FILE_SET handles public include paths; PRIVATE handles internal src headers
