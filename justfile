@@ -31,7 +31,7 @@ config preset="dev" *args: (_require "cmake")
   ln -sf build/{{ preset }}/compile_commands.json compile_commands.json
 
 # One-time setup: validates tools, configures CMake, and links compile_commands.json
-setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clang-tidy" "run-clang-tidy") (config preset args)
+setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clang-tidy" "run-clang-tidy" "doxygen") (config preset args)
 
 # Run `clang-tidy` static analysis on project sources
 lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (config preset)
@@ -51,6 +51,10 @@ pack preset="dev" *args: (_require "cpack") (build preset)
 
 # Run a complete local check (Format, Lint, Test)
 check preset="dev": format (lint preset) (test preset)
+
+# Generate documentation using `doxygen`
+docs *args: (_require "doxygen")
+  doxygen {{ args }}
 
 # Clean build artifacts using the active preset's build target
 clean-target preset="dev" *args: (build preset "--target" "clean" args)
