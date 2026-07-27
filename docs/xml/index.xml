@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.16.1" xml:lang="en-US">
+  <compound refid="classcrayon_1_1ThreadPool" kind="class"><name>crayon::ThreadPool</name>
+    <member refid="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" kind="typedef"><name>result_t</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1aadc80daebf74d070f419b29aaafe21ff" kind="typedef"><name>task_t</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1ae3be91e0f08177bd46376947d5b95271" kind="variable"><name>mutex_</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a2e281b2831520f6f3e8c59f63dd86e68" kind="variable"><name>condition_</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a136491f5945b0d1c35b8b7a94df60eb8" kind="variable"><name>is_shutting_down_</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a9608161c3d608460e7dd1ea92f050fbc" kind="variable"><name>tasks_</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1aa26bcd98dc28941656784ad5fefabe83" kind="variable"><name>workers_</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" kind="function"><name>available_parallelism</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1af44daf6c669f8a5a6b439dad89cec419" kind="function"><name>ThreadPool</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1ac2326f195a5e4a61c19a5caa7a806cce" kind="function"><name>ThreadPool</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a08b063f415de83cf7f1aea0f17ca8337" kind="function"><name>current_num_threads</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kind="function"><name>is_shutting_down</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" kind="function"><name>try_submit</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kind="function"><name>submit</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" kind="function"><name>shutdown</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a749bf6948d8843c7810b95cd31150c82" kind="function"><name>shutdown</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a032b8f2cf6d2900ff6dadc7c9ca63eee" kind="function"><name>~ThreadPool</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a22b4432d35281da7cb3c9171721eef13" kind="function"><name>try_enqueue_task</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a00a0904dca0379d86ab24000f3161922" kind="function"><name>try_enqueue_task_and_notify_one</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a9fa23e2d87d7b4013029eead6284a630" kind="function"><name>try_wait_and_pop_task</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a4f3936c5301fe691e11047bdcb8e970e" kind="function"><name>worker_loop</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a15955aa465bbc0eeb0f45a3f620641a7" kind="function"><name>try_shutdown</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1aee5df605e6b0aeb5cd846cc29a309167" kind="function"><name>try_shutdown_and_notify_all</name></member>
+    <member refid="classcrayon_1_1ThreadPool_1a35493779006cfea78eb485791a620181" kind="function"><name>package_task</name></member>
+  </compound>
+  <compound refid="namespacecrayon" kind="namespace"><name>crayon</name>
+  </compound>
+  <compound refid="namespacestd" kind="namespace"><name>std</name>
+  </compound>
+  <compound refid="crayon_8hpp" kind="file"><name>crayon.hpp</name>
+  </compound>
+  <compound refid="thread__pool_8hpp" kind="file"><name>thread_pool.hpp</name>
+  </compound>
+  <compound refid="README_8md" kind="file"><name>README.md</name>
+  </compound>
+  <compound refid="thread__pool_8cpp" kind="file"><name>thread_pool.cpp</name>
+  </compound>
+  <compound refid="dir_138bd5c324ffbcade997fd7a2b2c4cba" kind="dir"><name>include/crayon</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+  <compound refid="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir"><name>src</name>
+  </compound>
+  <compound refid="indexpage" kind="page"><name>index</name>
+  </compound>
+</doxygenindex>

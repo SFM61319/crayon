@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Crayon</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">_A<sp/>data<sp/>parallelism<sp/>library<sp/>for<sp/>C++,<sp/>inspired<sp/>by<sp/>[Rayon<sp/>for<sp/>Rust](https://docs.rs/rayon/latest/rayon/)._</highlight></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>
