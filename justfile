@@ -33,13 +33,13 @@ config preset="dev" *args: (_require "cmake")
 # One-time setup: validates tools, configures CMake, and links compile_commands.json
 setup preset="dev" *args: (_require "cmake" "ctest" "ninja" "clang-format" "clang-tidy" "run-clang-tidy" "doxygen") (config preset args)
 
-# Run `clang-tidy` static analysis on project sources
-lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (config preset)
-    run-clang-tidy -p=build/{{ preset }} -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
-
 # Build the project (library, tests, examples)
 build preset="dev" *args: (_require "cmake" "ninja") (config preset)
     cmake --build --preset {{ preset }} {{ args }}
+
+# Run `clang-tidy` static analysis on project sources
+lint preset="dev" *args: (_require "clang-tidy" "run-clang-tidy") (build preset)
+    run-clang-tidy -p=build/{{ preset }} -header-filter="^$(pwd)/(include|src)/.*" "^$(pwd)/(src|tests|examples)/.*" {{ args }}
 
 # Run unit tests via CTest
 test preset="dev" *args: (_require "ctest") (build preset)
