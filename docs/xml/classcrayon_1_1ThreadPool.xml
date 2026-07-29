@@ -1,0 +1,821 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="classcrayon_1_1ThreadPool" kind="class" language="C++" prot="public" final="yes">
+    <compoundname>crayon::ThreadPool</compoundname>
+    <includes refid="thread__pool_8hpp" local="no">thread_pool.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" prot="public" static="no">
+        <templateparamlist>
+          <param>
+            <type>typename Function</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>std::invoke_result_t&lt; std::decay_t&lt; Function &gt;, std::decay_t&lt; Args &gt;... &gt;</type>
+        <definition>using crayon::ThreadPool::result_t = 
+std::invoke_result_t&lt;std::decay_t&lt;Function&gt;, std::decay_t&lt;Args&gt;...&gt;</definition>
+        <argsstring></argsstring>
+        <name>result_t</name>
+        <qualifiedname>crayon::ThreadPool::result_t</qualifiedname>
+        <briefdescription>
+<para>Represents the result of a successful invocation of the <computeroutput>Function</computeroutput> with its <computeroutput>Args</computeroutput>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Requires the <computeroutput>Function</computeroutput> to be invocable with <computeroutput>Args</computeroutput>.</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>Function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the function called with the <computeroutput>Args</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the arguments passed to the <computeroutput>Function</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="70" column="3" bodyfile="include/crayon/thread_pool.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classcrayon_1_1ThreadPool_1aadc80daebf74d070f419b29aaafe21ff" prot="private" static="no">
+        <type>std::move_only_function&lt; void()&gt;</type>
+        <definition>using crayon::ThreadPool::task_t = std::move_only_function&lt;void()&gt;</definition>
+        <argsstring></argsstring>
+        <name>task_t</name>
+        <qualifiedname>crayon::ThreadPool::task_t</qualifiedname>
+        <briefdescription>
+<para>Represents a nullarized packaged task. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A nullarized packaged task is a packaged task that requires zero arguments to allow arbitrary task signatures to be submitted, as it stores the invocation argument mapping internally.</para>
+<para><simplesect kind="see"><para>ThreadPool::package_task </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="293" column="3" bodyfile="include/crayon/thread_pool.hpp" bodystart="293" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcrayon_1_1ThreadPool_1ae3be91e0f08177bd46376947d5b95271" prot="private" static="no" mutable="yes">
+        <type>std::mutex</type>
+        <definition>std::mutex crayon::ThreadPool::mutex_</definition>
+        <argsstring></argsstring>
+        <name>mutex_</name>
+        <qualifiedname>crayon::ThreadPool::mutex_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>The synchronization primitive to allow mutually exclusive thread-safe access to shared resources. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="297" column="22" bodyfile="include/crayon/thread_pool.hpp" bodystart="297" bodyend="297"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcrayon_1_1ThreadPool_1a2e281b2831520f6f3e8c59f63dd86e68" prot="private" static="no" mutable="no">
+        <type>std::condition_variable_any</type>
+        <definition>std::condition_variable_any crayon::ThreadPool::condition_</definition>
+        <argsstring></argsstring>
+        <name>condition_</name>
+        <qualifiedname>crayon::ThreadPool::condition_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>The synchronization primitive to efficiently block a thread and put it to sleep until a state change triggers an event notification that makes a waiting condition true. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="302" column="31" bodyfile="include/crayon/thread_pool.hpp" bodystart="302" bodyend="302"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcrayon_1_1ThreadPool_1a136491f5945b0d1c35b8b7a94df60eb8" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::is_shutting_down_</definition>
+        <argsstring></argsstring>
+        <name>is_shutting_down_</name>
+        <qualifiedname>crayon::ThreadPool::is_shutting_down_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>Whether this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> is shutting down. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> starts shutting down when explicitly requested by the owner or implicitly destroyed by the compiler at the end of the scope. It shuts down fully only after all tasks have been drained and executed by the now-dormant worker threads. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="310" column="8" bodyfile="include/crayon/thread_pool.hpp" bodystart="310" bodyend="310"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcrayon_1_1ThreadPool_1a9608161c3d608460e7dd1ea92f050fbc" prot="private" static="no" mutable="no">
+        <type>std::queue&lt; task_t &gt;</type>
+        <definition>std::queue&lt;task_t&gt; crayon::ThreadPool::tasks_</definition>
+        <argsstring></argsstring>
+        <name>tasks_</name>
+        <qualifiedname>crayon::ThreadPool::tasks_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>The queue of all the nullarized tasks submitted to this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref>, shared by all the worker threads. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="314" column="14" bodyfile="include/crayon/thread_pool.hpp" bodystart="314" bodyend="314"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcrayon_1_1ThreadPool_1aa26bcd98dc28941656784ad5fefabe83" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; std::jthread &gt;</type>
+        <definition>std::vector&lt;std::jthread&gt; crayon::ThreadPool::workers_</definition>
+        <argsstring></argsstring>
+        <name>workers_</name>
+        <qualifiedname>crayon::ThreadPool::workers_</qualifiedname>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>The list of all the worker threads created to execute nullary tasks in parallel indefinitely (until shutdown is requested). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="318" column="15" bodyfile="include/crayon/thread_pool.hpp" bodystart="318" bodyend="318"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" prot="public" static="yes" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t crayon::ThreadPool::available_parallelism</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>available_parallelism</name>
+        <qualifiedname>crayon::ThreadPool::available_parallelism</qualifiedname>
+        <briefdescription>
+<para>Returns an estimate of the default amount of parallelism a program should use. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Parallelism is a resource. A given machine provides a certain capacity for parallelism, i.e., a bound on the number of computations it can perform simultaneously. This number often corresponds to the amount of CPUs a computer has, but it may diverge in various cases.</para>
+<para>Host environments such as VMs or container orchestrators may want to restrict the amount of parallelism made available to programs in them. This is often done to limit the potential impact of (unintentionally) resource-intensive programs on other programs running on the same machine.</para>
+<para>Guaranteed to return a non-zero value.</para>
+<para><simplesect kind="return"><para>An estimate of the default amount of parallelism a program should use. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="90" column="22" bodyfile="src/thread_pool.cpp" bodystart="15" bodyend="20"/>
+        <referencedby refid="classcrayon_1_1ThreadPool_1ac2326f195a5e4a61c19a5caa7a806cce" compoundref="thread__pool_8cpp" startline="23" endline="43">ThreadPool</referencedby>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1af44daf6c669f8a5a6b439dad89cec419" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>crayon::ThreadPool::ThreadPool</definition>
+        <argsstring>()</argsstring>
+        <name>ThreadPool</name>
+        <qualifiedname>crayon::ThreadPool::ThreadPool</qualifiedname>
+        <briefdescription>
+<para>Constructs a new thread pool with <ref refid="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" kindref="member">the available amount of parallelism</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="94" column="3" bodyfile="src/thread_pool.cpp" bodystart="22" bodyend="22"/>
+        <references refid="classcrayon_1_1ThreadPool_1af44daf6c669f8a5a6b439dad89cec419" compoundref="thread__pool_8cpp" startline="22" endline="22">ThreadPool</references>
+        <referencedby refid="classcrayon_1_1ThreadPool_1af44daf6c669f8a5a6b439dad89cec419" compoundref="thread__pool_8cpp" startline="22" endline="22">ThreadPool</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1ac2326f195a5e4a61c19a5caa7a806cce" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>crayon::ThreadPool::ThreadPool</definition>
+        <argsstring>(std::size_t num_threads)</argsstring>
+        <name>ThreadPool</name>
+        <qualifiedname>crayon::ThreadPool::ThreadPool</qualifiedname>
+        <param>
+          <type>std::size_t</type>
+          <declname>num_threads</declname>
+        </param>
+        <briefdescription>
+<para>Constructs a new thread pool with the given number of threads. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the given <computeroutput>num_threads</computeroutput> is zero, this uses <ref refid="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" kindref="member">the available amount of parallelism</ref>.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>num_threads</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of threads to create in the thread pool. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="102" column="12" bodyfile="src/thread_pool.cpp" bodystart="23" bodyend="43"/>
+        <references refid="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" compoundref="thread__pool_8cpp" startline="15" endline="20">available_parallelism</references>
+        <references refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" compoundref="thread__pool_8cpp" startline="137" endline="137">shutdown</references>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a08b063f415de83cf7f1aea0f17ca8337" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t crayon::ThreadPool::current_num_threads</definition>
+        <argsstring>() const</argsstring>
+        <name>current_num_threads</name>
+        <qualifiedname>crayon::ThreadPool::current_num_threads</qualifiedname>
+        <briefdescription>
+<para>Returns the (current) number of threads in the thread pool. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>The (current) number of threads in the thread pool. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="117" column="15" bodyfile="src/thread_pool.cpp" bodystart="127" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" prot="public" static="no" nodiscard="yes" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::is_shutting_down</definition>
+        <argsstring>() const</argsstring>
+        <name>is_shutting_down</name>
+        <qualifiedname>crayon::ThreadPool::is_shutting_down</qualifiedname>
+        <briefdescription>
+<para>Returns whether this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> is shutting down. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> starts shutting down when explicitly requested by the owner or implicitly destroyed by the compiler at the end of the scope. It shuts down fully only after all tasks have been drained and executed by the now-dormant worker threads.</para>
+<para><simplesect kind="return"><para>Whether this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> is shutting down. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="128" column="8" bodyfile="src/thread_pool.cpp" bodystart="132" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Function</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; std::future&lt; <ref refid="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" kindref="member">result_t</ref>&lt; Function, Args... &gt; &gt; &gt;</type>
+        <definition>std::optional&lt; std::future&lt; result_t&lt; Function, Args... &gt; &gt; &gt; crayon::ThreadPool::try_submit</definition>
+        <argsstring>(Function &amp;&amp;function, Args &amp;&amp;...args)</argsstring>
+        <name>try_submit</name>
+        <qualifiedname>crayon::ThreadPool::try_submit</qualifiedname>
+        <param>
+          <type>Function &amp;&amp;</type>
+          <declname>function</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+<para>Tries to enqueue and submit a function and its arguments for execution in a background worker thread in this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref>, returns a future result on successful submission, and an empty value otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Requires the <computeroutput>function</computeroutput> to be invocable with <computeroutput>args</computeroutput>.</para>
+<para>An enqueue and submission attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>The <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">is shutting down</ref>.</para>
+</listitem></itemizedlist>
+</para>
+<para>A failed submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task.</para>
+<para>An empty result specifically indicates that the pool rejected the task because shutdown had begun. Other failures, including allocation failure or exceptions thrown while copying or moving the function or arguments, are propagated to the caller.</para>
+<para>For a simpler, unwrapped alternative, <simplesect kind="see"><para><ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">ThreadPool::submit</ref>.</para>
+</simplesect>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>Function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>function</computeroutput> to be called with the <computeroutput>args</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>args</computeroutput> to be passed to the <computeroutput>function</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to be called with the <computeroutput>args</computeroutput> after submission. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The arguments to be passed to the <computeroutput>function</computeroutput> after submission.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A future result on successful submission, and an empty value otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="167" column="3" bodyfile="include/crayon/thread_pool.hpp" bodystart="167" bodyend="181"/>
+        <references refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" compoundref="thread__pool_8hpp" startline="167" endline="181">try_submit</references>
+        <referencedby refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" compoundref="thread__pool_8hpp" startline="219" endline="228">submit</referencedby>
+        <referencedby refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" compoundref="thread__pool_8hpp" startline="167" endline="181">try_submit</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" prot="public" static="no" nodiscard="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Function</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>std::future&lt; <ref refid="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" kindref="member">result_t</ref>&lt; Function, Args... &gt; &gt;</type>
+        <definition>std::future&lt; result_t&lt; Function, Args... &gt; &gt; crayon::ThreadPool::submit</definition>
+        <argsstring>(Function &amp;&amp;function, Args &amp;&amp;...args)</argsstring>
+        <name>submit</name>
+        <qualifiedname>crayon::ThreadPool::submit</qualifiedname>
+        <param>
+          <type>Function &amp;&amp;</type>
+          <declname>function</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+<para>Enqueues and submits a function and its arguments for execution in a background worker thread in this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref>, returns a future result on successful submission, and failing otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Requires the <computeroutput>function</computeroutput> to be invocable with <computeroutput>args</computeroutput>.</para>
+<para>An enqueue and submission attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>The <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">is shutting down</ref>.</para>
+</listitem></itemizedlist>
+</para>
+<para>A rejected submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task.</para>
+<para>To handle shutdown rejection without an exception, <simplesect kind="see"><para><ref refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" kindref="member">ThreadPool::try_submit</ref>.</para>
+</simplesect>
+<parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>Function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>function</computeroutput> to be called with the <computeroutput>args</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>args</computeroutput> to be passed to the <computeroutput>function</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to be called with the <computeroutput>args</computeroutput> after submission. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The arguments to be passed to the <computeroutput>function</computeroutput> after submission.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A future result on successful submission. </para>
+</simplesect>
+<parameterlist kind="exception"><parameteritem>
+<parameternamelist>
+<parametername>std::runtime_error</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If shutdown has begun and the pool no longer accepts tasks. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Any</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>exception propagated while constructing or enqueueing the task, including allocation failures and exceptions thrown while copying or moving the function or arguments. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="219" column="15" bodyfile="include/crayon/thread_pool.hpp" bodystart="219" bodyend="228"/>
+        <references refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" compoundref="thread__pool_8hpp" startline="167" endline="181">try_submit</references>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void crayon::ThreadPool::shutdown</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>shutdown</name>
+        <qualifiedname>crayon::ThreadPool::shutdown</qualifiedname>
+        <briefdescription>
+<para>Requests this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future <ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">task submissions</ref>, and returns immediately without waiting for this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> to fully shutdown. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>To explicitly control whether to wait until complete shutdown, use <ref refid="classcrayon_1_1ThreadPool_1a749bf6948d8843c7810b95cd31150c82" kindref="member">ThreadPool::shutdown(bool)</ref>.</para>
+<para>This overload is thread-safe and may be called concurrently with task submission and with other non-blocking shutdown requests, provided that this object&apos;s lifetime remains active.</para>
+<para>This is an idempotent, irreversible operation. Once shutdown is successfully requested, this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> can no longer be used to process tasks. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> down on destruction at the end of the scope. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="247" column="8" bodyfile="src/thread_pool.cpp" bodystart="137" bodyend="137"/>
+        <references refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" compoundref="thread__pool_8cpp" startline="137" endline="137">shutdown</references>
+        <referencedby refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" compoundref="thread__pool_8cpp" startline="137" endline="137">shutdown</referencedby>
+        <referencedby refid="classcrayon_1_1ThreadPool_1ac2326f195a5e4a61c19a5caa7a806cce" compoundref="thread__pool_8cpp" startline="23" endline="43">ThreadPool</referencedby>
+        <referencedby refid="classcrayon_1_1ThreadPool_1a032b8f2cf6d2900ff6dadc7c9ca63eee" compoundref="thread__pool_8cpp" startline="155" endline="159">~ThreadPool</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a749bf6948d8843c7810b95cd31150c82" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void crayon::ThreadPool::shutdown</definition>
+        <argsstring>(bool wait) noexcept</argsstring>
+        <name>shutdown</name>
+        <qualifiedname>crayon::ThreadPool::shutdown</qualifiedname>
+        <param>
+          <type>bool</type>
+          <declname>wait</declname>
+        </param>
+        <briefdescription>
+<para>Requests this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future <ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">task submissions</ref>, and only waits for this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> to fully shutdown if <computeroutput>wait</computeroutput> is explicitly requested. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When <computeroutput>wait</computeroutput> is <computeroutput>false</computeroutput>, this operation is thread-safe and may be called concurrently with task submission and other non-blocking shutdown requests while this object&apos;s lifetime remains active.</para>
+<para>When <computeroutput>wait</computeroutput> is <computeroutput>true</computeroutput>, the caller must ensure that no other blocking shutdown or destruction executes concurrently. It must also not be called from a worker thread owned by this same pool.</para>
+<para>Waiting is cooperative. This function may block indefinitely if an executing task never returns or waits on work that cannot make progress.</para>
+<para>This is an idempotent, irreversible operation. Once shutdown is successfully requested, this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> can no longer be used to process tasks. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> down on destruction at the end of the scope.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>wait</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Whether to wait until every worker has finished and been joined. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="273" column="8" bodyfile="src/thread_pool.cpp" bodystart="138" bodyend="153"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a032b8f2cf6d2900ff6dadc7c9ca63eee" prot="public" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type></type>
+        <definition>crayon::ThreadPool::~ThreadPool</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>~ThreadPool</name>
+        <qualifiedname>crayon::ThreadPool::~ThreadPool</qualifiedname>
+        <briefdescription>
+<para>Gracefully shuts down this pool and joins all worker threads. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Queued tasks are drained and executing tasks are allowed to finish before destruction completes.</para>
+<para>The caller must ensure that no other thread accesses this object once destruction begins. Destruction must not be initiated from a worker thread owned by this same pool. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="283" column="3" bodyfile="src/thread_pool.cpp" bodystart="155" bodyend="159"/>
+        <references refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" compoundref="thread__pool_8cpp" startline="137" endline="137">shutdown</references>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a22b4432d35281da7cb3c9171721eef13" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::try_enqueue_task</definition>
+        <argsstring>(task_t &amp;&amp;task)</argsstring>
+        <name>try_enqueue_task</name>
+        <qualifiedname>crayon::ThreadPool::try_enqueue_task</qualifiedname>
+        <param>
+          <type>task_t &amp;&amp;</type>
+          <declname>task</declname>
+        </param>
+        <briefdescription>
+<para>Tries to enqueue a nullarized <computeroutput>task</computeroutput>, returns <computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>An enqueue attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>The <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">is shutting down</ref>.</para>
+</listitem></itemizedlist>
+</para>
+<para>This <emphasis>only</emphasis> enqueues the tasks, but does not notify the worker threads. If you want the worker threads to execute the task, try to enqueue the task andnotify one thread along with it.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>task</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The nullarized task to try to enqueue.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="335" column="8" bodyfile="src/thread_pool.cpp" bodystart="45" bodyend="57"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a00a0904dca0379d86ab24000f3161922" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::try_enqueue_task_and_notify_one</definition>
+        <argsstring>(task_t &amp;&amp;task)</argsstring>
+        <name>try_enqueue_task_and_notify_one</name>
+        <qualifiedname>crayon::ThreadPool::try_enqueue_task_and_notify_one</qualifiedname>
+        <param>
+          <type>task_t &amp;&amp;</type>
+          <declname>task</declname>
+        </param>
+        <briefdescription>
+<para>Tries to enqueue a nullarized <computeroutput>task</computeroutput>, notifies exactly one worker thread only on successful enqueue, returns <computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>An enqueue attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>The <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">is shutting down</ref>.</para>
+</listitem></itemizedlist>
+</para>
+<para>This enqueues the task <emphasis>and</emphasis> notifies exactly one worker thread. If you want to enqueue without notifying worker threads, try to enqueue the task only without notifying workers threads.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>task</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The nullarized task to try to enqueue.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="353" column="8" bodyfile="src/thread_pool.cpp" bodystart="59" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a9fa23e2d87d7b4013029eead6284a630" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::optional&lt; task_t &gt;</type>
+        <definition>std::optional&lt; ThreadPool::task_t &gt; crayon::ThreadPool::try_wait_and_pop_task</definition>
+        <argsstring>(std::stop_token stop_token)</argsstring>
+        <name>try_wait_and_pop_task</name>
+        <qualifiedname>crayon::ThreadPool::try_wait_and_pop_task</qualifiedname>
+        <param>
+          <type>std::stop_token</type>
+          <declname>stop_token</declname>
+        </param>
+        <briefdescription>
+<para>Tries to pop a nullarized task, blocking the thread and waiting for tasks while sleeping if the task queue is empty, and returns the task on success and an empty value on failure. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A pop attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>The task queue is empty and the <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">is shutting down</ref>.</para>
+</listitem></itemizedlist>
+</para>
+<para>A stop request wakes the worker but does not discard queued tasks. The worker continues draining available tasks before terminating.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>stop_token</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The stop token passed by the thread to notify on stop requests.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The nullarized task on success and an empty value on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="372" column="17" bodyfile="src/thread_pool.cpp" bodystart="71" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a4f3936c5301fe691e11047bdcb8e970e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void crayon::ThreadPool::worker_loop</definition>
+        <argsstring>(std::stop_token stop_token)</argsstring>
+        <name>worker_loop</name>
+        <qualifiedname>crayon::ThreadPool::worker_loop</qualifiedname>
+        <param>
+          <type>std::stop_token</type>
+          <declname>stop_token</declname>
+        </param>
+        <briefdescription>
+<para>The loop each worker thread executes until stopped. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>stop_token</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The stop token passed by the thread to notify on stop requests. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="378" column="8" bodyfile="src/thread_pool.cpp" bodystart="93" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a15955aa465bbc0eeb0f45a3f620641a7" prot="private" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::try_shutdown</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>try_shutdown</name>
+        <qualifiedname>crayon::ThreadPool::try_shutdown</qualifiedname>
+        <briefdescription>
+<para>Tries to shutdown this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref>, returns <computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A shutdown attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>Shutdown was previously attempted successfully.</para>
+</listitem></itemizedlist>
+</para>
+<para>This <emphasis>only</emphasis> requests a shutdown, but does not notify the worker threads. If you want the worker threads to listen to this request, try to shutdown and notify allthreads along with it.</para>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="392" column="8" bodyfile="src/thread_pool.cpp" bodystart="105" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1aee5df605e6b0aeb5cd846cc29a309167" prot="private" static="no" const="no" explicit="no" inline="no" noexcept="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool crayon::ThreadPool::try_shutdown_and_notify_all</definition>
+        <argsstring>() noexcept</argsstring>
+        <name>try_shutdown_and_notify_all</name>
+        <qualifiedname>crayon::ThreadPool::try_shutdown_and_notify_all</qualifiedname>
+        <briefdescription>
+<para>Tries to shutdown this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref>, notifies all worker threads only on successful shutdown request, returns <computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A shutdown attempt may fail due to at least one of the following reasons:<itemizedlist>
+<listitem><para>Shutdown was previously attempted successfully.</para>
+</listitem></itemizedlist>
+</para>
+<para>This requests a shutdown <emphasis>and</emphasis> notifies all worker threads. If you want to request a shutdown without notifying worker threads, try to request a shutdown only without notifying workers threads.</para>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> on success, and <computeroutput>false</computeroutput> otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="407" column="8" bodyfile="src/thread_pool.cpp" bodystart="117" bodyend="125"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classcrayon_1_1ThreadPool_1a35493779006cfea78eb485791a620181" prot="private" static="yes" nodiscard="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename Function</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>std::packaged_task&lt; <ref refid="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" kindref="member">result_t</ref>&lt; Function, Args... &gt;()&gt;</type>
+        <definition>static std::packaged_task&lt; result_t&lt; Function, Args... &gt;()&gt; crayon::ThreadPool::package_task</definition>
+        <argsstring>(Function &amp;&amp;function, Args &amp;&amp;...args)</argsstring>
+        <name>package_task</name>
+        <qualifiedname>crayon::ThreadPool::package_task</qualifiedname>
+        <param>
+          <type>Function &amp;&amp;</type>
+          <declname>function</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+<para>Packages any arbitrary <computeroutput>function</computeroutput> with the <computeroutput>args</computeroutput> mapped for nullary invocation and promised notification in the future and returns it. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The function and arguments are decay-copied into the packaged task and are invoked as rvalues. To pass a reference, use std::ref or std::cref and ensure the referenced object outlives task execution.</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>Function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>function</computeroutput> to be called with the <computeroutput>args</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the <computeroutput>args</computeroutput> to be passed to the <computeroutput>function</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>function</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to be called with the <computeroutput>args</computeroutput>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The arguments to be passed to the <computeroutput>function</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A packaged nullarized task for future invocation and notification. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/crayon/thread_pool.hpp" line="428" column="3" bodyfile="include/crayon/thread_pool.hpp" bodystart="428" bodyend="437"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Represents a user-created <ulink url="https://en.wikipedia.org/wiki/Thread_pool">thread pool</ulink>. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>You can execute functions explicitly within this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> using <ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">ThreadPool::submit</ref>. <ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">ThreadPool::submit</ref> executes a closure in one of the <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool&apos;s</ref> threads.</para>
+<para>When this <ref refid="classcrayon_1_1ThreadPool" kindref="compound">ThreadPool</ref> is destructed, that&apos;s a signal for the threads it manages to terminate, they will complete executing any remaining work that you have spawned, and automatically terminate.</para>
+<para><simplesect kind="par"><title>Thread safety</title><para><ref refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" kindref="member">ThreadPool::submit</ref>, <ref refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" kindref="member">ThreadPool::try_submit</ref>, <ref refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" kindref="member">ThreadPool::shutdown()</ref>, and <ref refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" kindref="member">ThreadPool::is_shutting_down</ref> may be called concurrently while this object&apos;s lifetime remains active.</para>
+</simplesect>
+Blocking shutdown using <ref refid="classcrayon_1_1ThreadPool_1a749bf6948d8843c7810b95cd31150c82" kindref="member">ThreadPool::shutdown(bool)</ref> with <computeroutput>wait == true</computeroutput> must not execute concurrently with another blocking shutdown or with destruction.</para>
+<para>Destruction must not race with any operation on this object. Blocking shutdown and destruction must not be initiated from a worker thread owned by this same pool.</para>
+<para><simplesect kind="par"><title>Task execution</title><para>Tasks may submit additional tasks to this pool. However, tasks should not synchronously wait for futures produced by this same pool, as this can exhaust all workers and deadlock.</para>
+</simplesect>
+Submitted functions and arguments are decay-copied into task storage. References must be passed explicitly with std::ref and must remain valid until task execution completes.</para>
+<para>Shutdown is cooperative. It does not forcibly interrupt executing user code, so shutdown may block indefinitely if a task never returns. </para>
+    </detaileddescription>
+    <location file="include/crayon/thread_pool.hpp" line="59" column="1" bodyfile="include/crayon/thread_pool.hpp" bodystart="59" bodyend="438"/>
+    <listofallmembers>
+      <member refid="classcrayon_1_1ThreadPool_1a7bf232c986add73400132fe36ed5d017" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>available_parallelism</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a2e281b2831520f6f3e8c59f63dd86e68" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>condition_</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a08b063f415de83cf7f1aea0f17ca8337" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>current_num_threads</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1af82390658d9f86704817a5fa6ed9a646" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>is_shutting_down</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a136491f5945b0d1c35b8b7a94df60eb8" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>is_shutting_down_</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1ae3be91e0f08177bd46376947d5b95271" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>mutex_</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a35493779006cfea78eb485791a620181" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>package_task</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1ae00e670104f98629da34b93cdc79bdbc" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>result_t</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1aaec47ae9bad9b47b3e6b0be50e92fc26" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>shutdown</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a749bf6948d8843c7810b95cd31150c82" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>shutdown</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a17a8b15df892a6ff470968f03da91139" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>submit</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1aadc80daebf74d070f419b29aaafe21ff" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>task_t</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a9608161c3d608460e7dd1ea92f050fbc" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>tasks_</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1af44daf6c669f8a5a6b439dad89cec419" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>ThreadPool</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1ac2326f195a5e4a61c19a5caa7a806cce" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>ThreadPool</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a22b4432d35281da7cb3c9171721eef13" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_enqueue_task</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a00a0904dca0379d86ab24000f3161922" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_enqueue_task_and_notify_one</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a15955aa465bbc0eeb0f45a3f620641a7" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_shutdown</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1aee5df605e6b0aeb5cd846cc29a309167" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_shutdown_and_notify_all</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a90f2a67f859053cfbb90a99c535d876f" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_submit</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a9fa23e2d87d7b4013029eead6284a630" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>try_wait_and_pop_task</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a4f3936c5301fe691e11047bdcb8e970e" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>worker_loop</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1aa26bcd98dc28941656784ad5fefabe83" prot="private" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>workers_</name></member>
+      <member refid="classcrayon_1_1ThreadPool_1a032b8f2cf6d2900ff6dadc7c9ca63eee" prot="public" virt="non-virtual"><scope>crayon::ThreadPool</scope><name>~ThreadPool</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.16.1" xml:lang="en-US">
+  <compounddef id="dir_138bd5c324ffbcade997fd7a2b2c4cba" kind="dir">
+    <compoundname>include/crayon</compoundname>
+    <innerfile refid="crayon_8hpp">crayon.hpp</innerfile>
+    <innerfile refid="thread__pool_8hpp">thread_pool.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/crayon/"/>
+  </compounddef>
+</doxygen>

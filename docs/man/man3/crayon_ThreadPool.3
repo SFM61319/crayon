@@ -1,0 +1,340 @@
+.TH "crayon::ThreadPool" 3 "Tue Jul 28 2026 01:37:14" "Version 0.1.0" "crayon" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+crayon::ThreadPool \- Represents a user-created \fRthread pool\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fR#include <thread_pool\&.hpp>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "template<typename Function, typename\&.\&.\&. Args> using \fBresult_t\fP"
+.br
+.RI "Represents the result of a successful invocation of the \fRFunction\fP with its \fRArgs\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBThreadPool\fP ()"
+.br
+.RI "Constructs a new thread pool with \fBthe available amount of parallelism\fP\&. "
+.ti -1c
+.RI "\fBThreadPool\fP (std::size_t num_threads)"
+.br
+.RI "Constructs a new thread pool with the given number of threads\&. "
+.ti -1c
+.RI "std::size_t \fBcurrent_num_threads\fP () const"
+.br
+.RI "Returns the (current) number of threads in the thread pool\&. "
+.ti -1c
+.RI "bool \fBis_shutting_down\fP () const"
+.br
+.RI "Returns whether this \fBThreadPool\fP is shutting down\&. "
+.ti -1c
+.RI "template<typename Function, typename\&.\&.\&. Args> std::optional< std::future< \fBresult_t\fP< Function, Args\&.\&.\&. > > > \fBtry_submit\fP (Function &&function, Args &&\&.\&.\&.args)"
+.br
+.RI "Tries to enqueue and submit a function and its arguments for execution in a background worker thread in this \fBThreadPool\fP, returns a \fBfuture\fP result on successful submission, and an \fBempty\fP value otherwise\&. "
+.ti -1c
+.RI "template<typename Function, typename\&.\&.\&. Args> std::future< \fBresult_t\fP< Function, Args\&.\&.\&. > > \fBsubmit\fP (Function &&function, Args &&\&.\&.\&.args)"
+.br
+.RI "Enqueues and submits a function and its arguments for execution in a background worker thread in this \fBThreadPool\fP, returns a \fBfuture\fP result on successful submission, and failing otherwise\&. "
+.ti -1c
+.RI "void \fBshutdown\fP () noexcept"
+.br
+.RI "Requests this \fBThreadPool\fP to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \fBtask submissions\fP, and returns immediately without waiting for this \fBThreadPool\fP to fully shutdown\&. "
+.ti -1c
+.RI "void \fBshutdown\fP (bool wait) noexcept"
+.br
+.RI "Requests this \fBThreadPool\fP to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \fBtask submissions\fP, and only waits for this \fBThreadPool\fP to fully shutdown if \fRwait\fP is explicitly requested\&. "
+.ti -1c
+.RI "\fB~ThreadPool\fP () noexcept"
+.br
+.RI "Gracefully shuts down this pool and joins all worker threads\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static std::size_t \fBavailable_parallelism\fP () noexcept"
+.br
+.RI "Returns an estimate of the default amount of parallelism a program should use\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a user-created \fRthread pool\fP\&. 
+
+You can execute functions explicitly within this \fBThreadPool\fP using \fBThreadPool::submit\fP\&. \fBThreadPool::submit\fP executes a closure in one of the \fBThreadPool's\fP threads\&.
+
+.PP
+When this \fBThreadPool\fP is destructed, that's a signal for the threads it manages to terminate, they will complete executing any remaining work that you have spawned, and automatically terminate\&.
+
+.PP
+\fBThread safety\fP
+.RS 4
+\fBThreadPool::submit\fP, \fBThreadPool::try_submit\fP, \fBThreadPool::shutdown()\fP, and \fBThreadPool::is_shutting_down\fP may be called concurrently while this object's lifetime remains active\&.
+.RE
+.PP
+Blocking shutdown using \fBThreadPool::shutdown(bool)\fP with \fRwait == true\fP must not execute concurrently with another blocking shutdown or with destruction\&.
+
+.PP
+Destruction must not race with any operation on this object\&. Blocking shutdown and destruction must not be initiated from a worker thread owned by this same pool\&.
+
+.PP
+\fBTask execution\fP
+.RS 4
+Tasks may submit additional tasks to this pool\&. However, tasks should not synchronously wait for futures produced by this same pool, as this can exhaust all workers and deadlock\&.
+.RE
+.PP
+Submitted functions and arguments are decay-copied into task storage\&. References must be passed explicitly with \fBstd::ref\fP and must remain valid until task execution completes\&.
+
+.PP
+Shutdown is cooperative\&. It does not forcibly interrupt executing user code, so shutdown may block indefinitely if a task never returns\&. 
+.PP
+Definition at line \fB59\fP of file \fBthread_pool\&.hpp\fP\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "template<typename Function, typename\&.\&.\&. Args> using \fBcrayon::ThreadPool::result_t\fP"
+\fBInitial value:\fP
+.nf
+
+std::invoke_result_t<std::decay_t<Function>, std::decay_t<Args>\&.\&.\&.>
+.PP
+.fi
+
+.PP
+Represents the result of a successful invocation of the \fRFunction\fP with its \fRArgs\fP\&. Requires the \fRFunction\fP to be invocable with \fRArgs\fP\&.
+
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIFunction\fP Type of the function called with the \fRArgs\fP\&. 
+.br
+\fIArgs\fP Type of the arguments passed to the \fRFunction\fP\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB70\fP of file \fBthread_pool\&.hpp\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "crayon::ThreadPool::ThreadPool ()"
+
+.PP
+Constructs a new thread pool with \fBthe available amount of parallelism\fP\&. 
+.PP
+Definition at line \fB22\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "crayon::ThreadPool::ThreadPool (std::size_t num_threads)\fR [explicit]\fP"
+
+.PP
+Constructs a new thread pool with the given number of threads\&. If the given \fRnum_threads\fP is zero, this uses \fBthe available amount of parallelism\fP\&.
+
+.PP
+\fBParameters\fP
+.RS 4
+\fInum_threads\fP The number of threads to create in the thread pool\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB23\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "crayon::ThreadPool::~ThreadPool ()\fR [noexcept]\fP"
+
+.PP
+Gracefully shuts down this pool and joins all worker threads\&. Queued tasks are drained and executing tasks are allowed to finish before destruction completes\&.
+
+.PP
+The caller must ensure that no other thread accesses this object once destruction begins\&. Destruction must not be initiated from a worker thread owned by this same pool\&. 
+.PP
+Definition at line \fB155\fP of file \fBthread_pool\&.cpp\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "std::size_t crayon::ThreadPool::available_parallelism ()\fR [static]\fP, \fR [noexcept]\fP"
+
+.PP
+Returns an estimate of the default amount of parallelism a program should use\&. Parallelism is a resource\&. A given machine provides a certain capacity for parallelism, i\&.e\&., a bound on the number of computations it can perform simultaneously\&. This number often corresponds to the amount of CPUs a computer has, but it may diverge in various cases\&.
+
+.PP
+Host environments such as VMs or container orchestrators may want to restrict the amount of parallelism made available to programs in them\&. This is often done to limit the potential impact of (unintentionally) resource-intensive programs on other programs running on the same machine\&.
+
+.PP
+Guaranteed to return a non-zero value\&.
+
+.PP
+\fBReturns\fP
+.RS 4
+An estimate of the default amount of parallelism a program should use\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB15\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "std::size_t crayon::ThreadPool::current_num_threads () const\fR [nodiscard]\fP"
+
+.PP
+Returns the (current) number of threads in the thread pool\&. 
+.PP
+\fBReturns\fP
+.RS 4
+The (current) number of threads in the thread pool\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB127\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "bool crayon::ThreadPool::is_shutting_down () const\fR [nodiscard]\fP"
+
+.PP
+Returns whether this \fBThreadPool\fP is shutting down\&. A \fBThreadPool\fP starts shutting down when explicitly requested by the owner or implicitly destroyed by the compiler at the end of the scope\&. It shuts down fully only after all tasks have been drained and executed by the now-dormant worker threads\&.
+
+.PP
+\fBReturns\fP
+.RS 4
+Whether this \fBThreadPool\fP is shutting down\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB132\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "void crayon::ThreadPool::shutdown ()\fR [noexcept]\fP"
+
+.PP
+Requests this \fBThreadPool\fP to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \fBtask submissions\fP, and returns immediately without waiting for this \fBThreadPool\fP to fully shutdown\&. To explicitly control whether to wait until complete shutdown, use \fBThreadPool::shutdown(bool)\fP\&.
+
+.PP
+This overload is thread-safe and may be called concurrently with task submission and with other non-blocking shutdown requests, provided that this object's lifetime remains active\&.
+
+.PP
+This is an idempotent, irreversible operation\&. Once shutdown is successfully requested, this \fBThreadPool\fP can no longer be used to process tasks\&. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this \fBThreadPool\fP down on destruction at the end of the scope\&. 
+.PP
+Definition at line \fB137\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "void crayon::ThreadPool::shutdown (bool wait)\fR [noexcept]\fP"
+
+.PP
+Requests this \fBThreadPool\fP to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \fBtask submissions\fP, and only waits for this \fBThreadPool\fP to fully shutdown if \fRwait\fP is explicitly requested\&. When \fRwait\fP is \fRfalse\fP, this operation is thread-safe and may be called concurrently with task submission and other non-blocking shutdown requests while this object's lifetime remains active\&.
+
+.PP
+When \fRwait\fP is \fRtrue\fP, the caller must ensure that no other blocking shutdown or destruction executes concurrently\&. It must also not be called from a worker thread owned by this same pool\&.
+
+.PP
+Waiting is cooperative\&. This function may block indefinitely if an executing task never returns or waits on work that cannot make progress\&.
+
+.PP
+This is an idempotent, irreversible operation\&. Once shutdown is successfully requested, this \fBThreadPool\fP can no longer be used to process tasks\&. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this \fBThreadPool\fP down on destruction at the end of the scope\&.
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIwait\fP Whether to wait until every worker has finished and been joined\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB138\fP of file \fBthread_pool\&.cpp\fP\&.
+.SS "template<typename Function, typename\&.\&.\&. Args> std::future< \fBresult_t\fP< Function, Args\&.\&.\&. > > crayon::ThreadPool::submit (Function && function, Args &&\&.\&.\&. args)\fR [inline]\fP, \fR [nodiscard]\fP"
+
+.PP
+Enqueues and submits a function and its arguments for execution in a background worker thread in this \fBThreadPool\fP, returns a \fBfuture\fP result on successful submission, and failing otherwise\&. Requires the \fRfunction\fP to be invocable with \fRargs\fP\&.
+
+.PP
+An enqueue and submission attempt may fail due to at least one of the following reasons:
+.IP "\(bu" 2
+The \fBThreadPool\fP \fBis shutting down\fP\&.
+.PP
+
+.PP
+A rejected submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task\&.
+
+.PP
+To handle shutdown rejection without an exception, 
+.PP
+\fBSee also\fP
+.RS 4
+\fBThreadPool::try_submit\fP\&.
+.RE
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIFunction\fP Type of the \fRfunction\fP to be called with the \fRargs\fP\&. 
+.br
+\fIArgs\fP Type of the \fRargs\fP to be passed to the \fRfunction\fP\&.
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunction\fP The function to be called with the \fRargs\fP after submission\&. 
+.br
+\fIargs\fP The arguments to be passed to the \fRfunction\fP after submission\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A \fBfuture\fP result on successful submission\&. 
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fIstd::runtime_error\fP If shutdown has begun and the pool no longer accepts tasks\&. 
+.br
+\fIAny\fP exception propagated while constructing or enqueueing the task, including allocation failures and exceptions thrown while copying or moving the function or arguments\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB219\fP of file \fBthread_pool\&.hpp\fP\&.
+.SS "template<typename Function, typename\&.\&.\&. Args> std::optional< std::future< \fBresult_t\fP< Function, Args\&.\&.\&. > > > crayon::ThreadPool::try_submit (Function && function, Args &&\&.\&.\&. args)\fR [inline]\fP, \fR [nodiscard]\fP"
+
+.PP
+Tries to enqueue and submit a function and its arguments for execution in a background worker thread in this \fBThreadPool\fP, returns a \fBfuture\fP result on successful submission, and an \fBempty\fP value otherwise\&. Requires the \fRfunction\fP to be invocable with \fRargs\fP\&.
+
+.PP
+An enqueue and submission attempt may fail due to at least one of the following reasons:
+.IP "\(bu" 2
+The \fBThreadPool\fP \fBis shutting down\fP\&.
+.PP
+
+.PP
+A failed submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task\&.
+
+.PP
+An empty result specifically indicates that the pool rejected the task because shutdown had begun\&. Other failures, including allocation failure or exceptions thrown while copying or moving the function or arguments, are propagated to the caller\&.
+
+.PP
+For a simpler, unwrapped alternative, 
+.PP
+\fBSee also\fP
+.RS 4
+\fBThreadPool::submit\fP\&.
+.RE
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIFunction\fP Type of the \fRfunction\fP to be called with the \fRargs\fP\&. 
+.br
+\fIArgs\fP Type of the \fRargs\fP to be passed to the \fRfunction\fP\&.
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunction\fP The function to be called with the \fRargs\fP after submission\&. 
+.br
+\fIargs\fP The arguments to be passed to the \fRfunction\fP after submission\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A \fBfuture\fP result on successful submission, and an \fBempty\fP value otherwise\&. 
+.RE
+.PP
+
+.PP
+Definition at line \fB167\fP of file \fBthread_pool\&.hpp\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for crayon from the source code\&.

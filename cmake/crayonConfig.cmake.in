@@ -1,0 +1,13 @@
+# Copyright (c) 2026 Avinash Maddikonda
+# SPDX-License-Identifier: Apache-2.0
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find upstream public dependencies required by Crayon's interface/targets
+find_dependency(Threads REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+check_required_components(@PROJECT_NAME@)

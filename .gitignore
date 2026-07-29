@@ -1,3 +1,67 @@
+# GitHub's `.gitignore` templates for:
+#
+# 1. [C](https://github.com/github/gitignore/blob/57286c3887203259752b747db94e6c3ad10ec53d/C.gitignore)
+# 2. [C++](https://github.com/github/gitignore/blob/57286c3887203259752b747db94e6c3ad10ec53d/C%2B%2B.gitignore)
+# 3. [CMake](https://github.com/github/gitignore/blob/57286c3887203259752b747db94e6c3ad10ec53d/CMake.gitignore)
+# 4. [Ninja](https://github.com/github/gitignore/blob/57286c3887203259752b747db94e6c3ad10ec53d/Global/Ninja.gitignore)
+# 5. [Gcov](https://github.com/github/gitignore/blob/57286c3887203259752b747db94e6c3ad10ec53d/Gcov.gitignore)
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# debug information files
+*.dwo
+
 # Prerequisites
 *.d
 
@@ -22,7 +86,6 @@
 *.dylib
 *.dll
 *.so.*
-
 
 # Fortran module files
 *.mod
@@ -67,3 +130,32 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json
+
+# CLion
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+#cmake-build-*
+
+.ninja_deps
+.ninja_log
+
+# gcc coverage testing tool files
+
+*.gcno
+*.gcda
+*.gcov

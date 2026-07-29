@@ -1,0 +1,450 @@
+\doxysection{crayon::\+Thread\+Pool Class Reference}
+\hypertarget{classcrayon_1_1ThreadPool}{}\label{classcrayon_1_1ThreadPool}\index{crayon::ThreadPool@{crayon::ThreadPool}}
+
+
+Represents a user-\/created \href{https://en.wikipedia.org/wiki/Thread_pool}{\texttt{thread pool}}.  
+
+
+
+
+{\ttfamily \+\#include $<$thread\+\_\+pool.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Function, typename... Args$>$ }\\using \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{result\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Represents the result of a successful invocation of the {\ttfamily Function} with its {\ttfamily Args}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}{Thread\+Pool}} ()
+\begin{DoxyCompactList}\small\item\em Constructs a new thread pool with \doxylink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{the available amount of parallelism}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ac2326f195a5e4a61c19a5caa7a806cce}{Thread\+Pool}} (std::\+size\+\_\+t num\+\_\+threads)
+\begin{DoxyCompactList}\small\item\em Constructs a new thread pool with the given number of threads. \end{DoxyCompactList}\item 
+std::\+size\+\_\+t \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a08b063f415de83cf7f1aea0f17ca8337}{current\+\_\+num\+\_\+threads}} () const
+\begin{DoxyCompactList}\small\item\em Returns the (current) number of threads in the thread pool. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{is\+\_\+shutting\+\_\+down}} () const
+\begin{DoxyCompactList}\small\item\em Returns whether this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} is shutting down. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Function, typename... Args$>$ }\\std::\+optional$<$ std::\+future$<$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{result\+\_\+t}}$<$ Function, Args... $>$ $>$ $>$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f}{try\+\_\+submit}} (Function \&\&function, Args \&\&...args)
+\begin{DoxyCompactList}\small\item\em Tries to enqueue and submit a function and its arguments for execution in a background worker thread in this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool}, returns a future result on successful submission, and an empty value otherwise. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Function, typename... Args$>$ }\\std::\+future$<$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{result\+\_\+t}}$<$ Function, Args... $>$ $>$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{submit}} (Function \&\&function, Args \&\&...args)
+\begin{DoxyCompactList}\small\item\em Enqueues and submits a function and its arguments for execution in a background worker thread in this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool}, returns a future result on successful submission, and failing otherwise. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{shutdown}} () noexcept
+\begin{DoxyCompactList}\small\item\em Requests this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{task submissions}, and returns immediately without waiting for this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to fully shutdown. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82}{shutdown}} (bool wait) noexcept
+\begin{DoxyCompactList}\small\item\em Requests this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{task submissions}, and only waits for this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to fully shutdown if {\ttfamily wait} is explicitly requested. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee}{\texorpdfstring{$\sim$}{\string~}\+Thread\+Pool}} () noexcept
+\begin{DoxyCompactList}\small\item\em Gracefully shuts down this pool and joins all worker threads. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+size\+\_\+t \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{available\+\_\+parallelism}} () noexcept
+\begin{DoxyCompactList}\small\item\em Returns an estimate of the default amount of parallelism a program should use. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a user-\/created \href{https://en.wikipedia.org/wiki/Thread_pool}{\texttt{thread pool}}. 
+
+You can execute functions explicitly within this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} using \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{Thread\+Pool::\+submit}. \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{Thread\+Pool::\+submit} executes a closure in one of the \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool\textquotesingle{}s} threads.
+
+When this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} is destructed, that\textquotesingle{}s a signal for the threads it manages to terminate, they will complete executing any remaining work that you have spawned, and automatically terminate.
+
+\begin{DoxyParagraph}{Thread safety}
+\doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{Thread\+Pool::\+submit}, \doxylink{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f}{Thread\+Pool::\+try\+\_\+submit}, \doxylink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{Thread\+Pool::\+shutdown()}, and \doxylink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{Thread\+Pool::\+is\+\_\+shutting\+\_\+down} may be called concurrently while this object\textquotesingle{}s lifetime remains active.
+\end{DoxyParagraph}
+Blocking shutdown using \doxylink{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82}{Thread\+Pool::\+shutdown(bool)} with {\ttfamily wait == true} must not execute concurrently with another blocking shutdown or with destruction.
+
+Destruction must not race with any operation on this object. Blocking shutdown and destruction must not be initiated from a worker thread owned by this same pool.
+
+\begin{DoxyParagraph}{Task execution}
+Tasks may submit additional tasks to this pool. However, tasks should not synchronously wait for futures produced by this same pool, as this can exhaust all workers and deadlock.
+\end{DoxyParagraph}
+Submitted functions and arguments are decay-\/copied into task storage. References must be passed explicitly with std::\+ref and must remain valid until task execution completes.
+
+Shutdown is cooperative. It does not forcibly interrupt executing user code, so shutdown may block indefinitely if a task never returns. 
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8hpp_source_l00059}{59}} of file \doxymbox{\hyperlink{thread__pool_8hpp_source}{thread\+\_\+pool.\+hpp}}.
+
+
+
+\label{doc-typedef-members}
+\Hypertarget{classcrayon_1_1ThreadPool_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}\index{crayon::ThreadPool@{crayon::ThreadPool}!result\_t@{result\_t}}
+\index{result\_t@{result\_t}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{result\_t}{result\_t}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc} 
+template$<$typename Function, typename... Args$>$ \\
+using \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{crayon::\+\+Thread\+Pool::\+result\+\_\+t}}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{std::invoke\_result\_t<std::decay\_t<Function>,\ std::decay\_t<Args>...>}
+
+\end{DoxyCode}
+
+
+Represents the result of a successful invocation of the {\ttfamily Function} with its {\ttfamily Args}. 
+
+Requires the {\ttfamily Function} to be invocable with {\ttfamily Args}.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Function} & Type of the function called with the {\ttfamily Args}. \\
+\hline
+{\em Args} & Type of the arguments passed to the {\ttfamily Function}. \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8hpp_source_l00070}{70}} of file \doxymbox{\hyperlink{thread__pool_8hpp_source}{thread\+\_\+pool.\+hpp}}.
+
+
+
+\label{doc-constructors}
+\Hypertarget{classcrayon_1_1ThreadPool_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}\index{crayon::ThreadPool@{crayon::ThreadPool}!ThreadPool@{ThreadPool}}
+\index{ThreadPool@{ThreadPool}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{ThreadPool()}{ThreadPool()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419} 
+crayon::\+\+Thread\+Pool::\+\+Thread\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Constructs a new thread pool with \doxylink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{the available amount of parallelism}. 
+
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00022}{22}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcrayon_1_1ThreadPool_ac2326f195a5e4a61c19a5caa7a806cce}\index{crayon::ThreadPool@{crayon::ThreadPool}!ThreadPool@{ThreadPool}}
+\index{ThreadPool@{ThreadPool}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{ThreadPool()}{ThreadPool()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_ac2326f195a5e4a61c19a5caa7a806cce} 
+crayon::\+\+Thread\+Pool::\+\+Thread\+Pool (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t}]{num\+\_\+threads}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a new thread pool with the given number of threads. 
+
+If the given {\ttfamily num\+\_\+threads} is zero, this uses \doxylink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{the available amount of parallelism}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+threads} & The number of threads to create in the thread pool. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00023}{23}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcrayon_1_1ThreadPool_ac2326f195a5e4a61c19a5caa7a806cce_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee}\index{crayon::ThreadPool@{crayon::ThreadPool}!````~ThreadPool@{\texorpdfstring{$\sim$}{\string~}ThreadPool}}
+\index{````~ThreadPool@{\texorpdfstring{$\sim$}{\string~}ThreadPool}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ThreadPool()}{\string~ThreadPool()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee} 
+crayon::\+\+Thread\+Pool::\+\texorpdfstring{$\sim$}{\string~}\+Thread\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Gracefully shuts down this pool and joins all worker threads. 
+
+Queued tasks are drained and executing tasks are allowed to finish before destruction completes.
+
+The caller must ensure that no other thread accesses this object once destruction begins. Destruction must not be initiated from a worker thread owned by this same pool. 
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00155}{155}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{doc-func-members}
+\Hypertarget{classcrayon_1_1ThreadPool_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}\index{crayon::ThreadPool@{crayon::ThreadPool}!available\_parallelism@{available\_parallelism}}
+\index{available\_parallelism@{available\_parallelism}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{available\_parallelism()}{available\_parallelism()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017} 
+std::\+size\+\_\+t crayon::\+\+Thread\+Pool::\+available\+\_\+parallelism (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+Returns an estimate of the default amount of parallelism a program should use. 
+
+Parallelism is a resource. A given machine provides a certain capacity for parallelism, i.\+e., a bound on the number of computations it can perform simultaneously. This number often corresponds to the amount of CPUs a computer has, but it may diverge in various cases.
+
+Host environments such as VMs or container orchestrators may want to restrict the amount of parallelism made available to programs in them. This is often done to limit the potential impact of (unintentionally) resource-\/intensive programs on other programs running on the same machine.
+
+Guaranteed to return a non-\/zero value.
+
+\begin{DoxyReturn}{Returns}
+An estimate of the default amount of parallelism a program should use. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00015}{15}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+Here is the caller graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcrayon_1_1ThreadPool_a08b063f415de83cf7f1aea0f17ca8337}\index{crayon::ThreadPool@{crayon::ThreadPool}!current\_num\_threads@{current\_num\_threads}}
+\index{current\_num\_threads@{current\_num\_threads}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{current\_num\_threads()}{current\_num\_threads()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a08b063f415de83cf7f1aea0f17ca8337} 
+std::\+size\+\_\+t crayon::\+\+Thread\+Pool::\+current\+\_\+num\+\_\+threads (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Returns the (current) number of threads in the thread pool. 
+
+\begin{DoxyReturn}{Returns}
+The (current) number of threads in the thread pool. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00127}{127}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+\Hypertarget{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}\index{crayon::ThreadPool@{crayon::ThreadPool}!is\_shutting\_down@{is\_shutting\_down}}
+\index{is\_shutting\_down@{is\_shutting\_down}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{is\_shutting\_down()}{is\_shutting\_down()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646} 
+bool crayon::\+\+Thread\+Pool::\+is\+\_\+shutting\+\_\+down (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Returns whether this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} is shutting down. 
+
+A \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} starts shutting down when explicitly requested by the owner or implicitly destroyed by the compiler at the end of the scope. It shuts down fully only after all tasks have been drained and executed by the now-\/dormant worker threads.
+
+\begin{DoxyReturn}{Returns}
+Whether this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} is shutting down. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00132}{132}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+\Hypertarget{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}\index{crayon::ThreadPool@{crayon::ThreadPool}!shutdown@{shutdown}}
+\index{shutdown@{shutdown}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{shutdown()}{shutdown()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26} 
+void crayon::\+\+Thread\+Pool::\+shutdown (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Requests this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{task submissions}, and returns immediately without waiting for this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to fully shutdown. 
+
+To explicitly control whether to wait until complete shutdown, use \doxylink{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82}{Thread\+Pool::\+shutdown(bool)}.
+
+This overload is thread-\/safe and may be called concurrently with task submission and with other non-\/blocking shutdown requests, provided that this object\textquotesingle{}s lifetime remains active.
+
+This is an idempotent, irreversible operation. Once shutdown is successfully requested, this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} can no longer be used to process tasks. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} down on destruction at the end of the scope. 
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00137}{137}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82}\index{crayon::ThreadPool@{crayon::ThreadPool}!shutdown@{shutdown}}
+\index{shutdown@{shutdown}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{shutdown()}{shutdown()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82} 
+void crayon::\+\+Thread\+Pool::\+shutdown (\begin{DoxyParamCaption}\item[{bool}]{wait}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Requests this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to gracefully shutdown after draining and executing all the queued and inflight tasks, respectively, disallows future \doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{task submissions}, and only waits for this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} to fully shutdown if {\ttfamily wait} is explicitly requested. 
+
+When {\ttfamily wait} is {\ttfamily false}, this operation is thread-\/safe and may be called concurrently with task submission and other non-\/blocking shutdown requests while this object\textquotesingle{}s lifetime remains active.
+
+When {\ttfamily wait} is {\ttfamily true}, the caller must ensure that no other blocking shutdown or destruction executes concurrently. It must also not be called from a worker thread owned by this same pool.
+
+Waiting is cooperative. This function may block indefinitely if an executing task never returns or waits on work that cannot make progress.
+
+This is an idempotent, irreversible operation. Once shutdown is successfully requested, this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} can no longer be used to process tasks. Unless you absolutely need to explicitly request shutdown before the end of the scope is reached, prefer letting the compiler shut this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} down on destruction at the end of the scope.
+
+
+\begin{DoxyParams}{Parameters}
+{\em wait} & Whether to wait until every worker has finished and been joined. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8cpp_source_l00138}{138}} of file \doxymbox{\hyperlink{thread__pool_8cpp_source}{thread\+\_\+pool.\+cpp}}.
+
+\Hypertarget{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}\index{crayon::ThreadPool@{crayon::ThreadPool}!submit@{submit}}
+\index{submit@{submit}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{submit()}{submit()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139} 
+template$<$typename Function, typename... Args$>$ \\
+std::\+future$<$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{result\+\_\+t}}$<$ Function, Args... $>$ $>$ crayon::\+\+Thread\+Pool::\+submit (\begin{DoxyParamCaption}\item[{Function \&\&}]{function}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Enqueues and submits a function and its arguments for execution in a background worker thread in this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool}, returns a future result on successful submission, and failing otherwise. 
+
+Requires the {\ttfamily function} to be invocable with {\ttfamily args}.
+
+An enqueue and submission attempt may fail due to at least one of the following reasons:\+
+\begin{DoxyItemize}
+\item The \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} \doxylink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{is shutting down}.
+\end{DoxyItemize}
+
+A rejected submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task.
+
+To handle shutdown rejection without an exception, \begin{DoxySeeAlso}{See also}
+\doxylink{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f}{Thread\+Pool::\+try\+\_\+submit}.
+\end{DoxySeeAlso}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Function} & Type of the {\ttfamily function} to be called with the {\ttfamily args}. \\
+\hline
+{\em Args} & Type of the {\ttfamily args} to be passed to the {\ttfamily function}.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em function} & The function to be called with the {\ttfamily args} after submission. \\
+\hline
+{\em args} & The arguments to be passed to the {\ttfamily function} after submission.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A future result on successful submission. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std::\+runtime\+\_\+error} & If shutdown has begun and the pool no longer accepts tasks. \\
+\hline
+{\em Any} & exception propagated while constructing or enqueueing the task, including allocation failures and exceptions thrown while copying or moving the function or arguments. \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8hpp_source_l00219}{219}} of file \doxymbox{\hyperlink{thread__pool_8hpp_source}{thread\+\_\+pool.\+hpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f}\index{crayon::ThreadPool@{crayon::ThreadPool}!try\_submit@{try\_submit}}
+\index{try\_submit@{try\_submit}!crayon::ThreadPool@{crayon::ThreadPool}}
+\doxysubsubsection{\texorpdfstring{try\_submit()}{try\_submit()}}
+{\footnotesize\ttfamily \label{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f} 
+template$<$typename Function, typename... Args$>$ \\
+std::\+optional$<$ std::\+future$<$ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ae00e670104f98629da34b93cdc79bdbc}{result\+\_\+t}}$<$ Function, Args... $>$ $>$ $>$ crayon::\+\+Thread\+Pool::\+try\+\_\+submit (\begin{DoxyParamCaption}\item[{Function \&\&}]{function}{, }\item[{Args \&\&...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Tries to enqueue and submit a function and its arguments for execution in a background worker thread in this \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool}, returns a future result on successful submission, and an empty value otherwise. 
+
+Requires the {\ttfamily function} to be invocable with {\ttfamily args}.
+
+An enqueue and submission attempt may fail due to at least one of the following reasons:\+
+\begin{DoxyItemize}
+\item The \doxylink{classcrayon_1_1ThreadPool}{Thread\+Pool} \doxylink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{is shutting down}.
+\end{DoxyItemize}
+
+A failed submission may still consume functions or arguments passed as rvalues because task storage is constructed before the pool determines whether it can accept the task.
+
+An empty result specifically indicates that the pool rejected the task because shutdown had begun. Other failures, including allocation failure or exceptions thrown while copying or moving the function or arguments, are propagated to the caller.
+
+For a simpler, unwrapped alternative, \begin{DoxySeeAlso}{See also}
+\doxylink{classcrayon_1_1ThreadPool_a17a8b15df892a6ff470968f03da91139}{Thread\+Pool::\+submit}.
+\end{DoxySeeAlso}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Function} & Type of the {\ttfamily function} to be called with the {\ttfamily args}. \\
+\hline
+{\em Args} & Type of the {\ttfamily args} to be passed to the {\ttfamily function}.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em function} & The function to be called with the {\ttfamily args} after submission. \\
+\hline
+{\em args} & The arguments to be passed to the {\ttfamily function} after submission.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A future result on successful submission, and an empty value otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{thread__pool_8hpp_source_l00167}{167}} of file \doxymbox{\hyperlink{thread__pool_8hpp_source}{thread\+\_\+pool.\+hpp}}.
+
+Here is the call graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classcrayon_1_1ThreadPool_a90f2a67f859053cfbb90a99c535d876f_icgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+include/\+crayon/\+thread\+\_\+pool.\+hpp\item 
+src/\+thread\+\_\+pool.\+cpp\end{DoxyCompactItemize}

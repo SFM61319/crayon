@@ -1,0 +1,167 @@
+\doxysection{thread\+\_\+pool.\+cpp}
+\hypertarget{thread__pool_8cpp_source}{}\label{thread__pool_8cpp_source}\index{src/thread\_pool.cpp@{src/thread\_pool.cpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00001}00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2026\ Avinash\ Maddikonda}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00002}00002\ \textcolor{comment}{//\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <stop\_token>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <crayon/thread\_pool.hpp>}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00013}00013\ \textcolor{keyword}{namespace\ }crayon\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00015}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{00015}}\ std::size\_t\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{ThreadPool::available\_parallelism}}()\ noexcept\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00016}00016\ \ \ \textcolor{comment}{//\ \`{}std::jthread::hardware\_concurrency()`\ is\ only\ a\ hint\ and\ may\ return\ zero.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00017}00017\ \ \ \textcolor{comment}{//\ Ensure\ the\ pool\ always\ has\ at\ least\ one\ worker.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00018}00018\ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ hardware\_concurrency\{std::jthread::hardware\_concurrency()\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00019}00019\ \ \ \textcolor{keywordflow}{return}\ hardware\_concurrency\ ==\ 0\ ?\ 1\ :\ hardware\_concurrency;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00020}00020\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00022}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}{00022}}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}{ThreadPool::ThreadPool}}()\ :\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}{ThreadPool}}\{0\}\ \{\}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00023}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_ac2326f195a5e4a61c19a5caa7a806cce}{00023}}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af44daf6c669f8a5a6b439dad89cec419}{ThreadPool::ThreadPool}}(std::size\_t\ num\_threads)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00024}00024\ \ \ \textcolor{keywordflow}{if}\ (num\_threads\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00025}00025\ \ \ \ \ num\_threads\ =\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a7bf232c986add73400132fe36ed5d017}{available\_parallelism}}();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00026}00026\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00028}00028\ \ \ workers\_.reserve(num\_threads);}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00029}00029\ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\{0\};\ i\ <\ num\_threads;\ ++i)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00031}00031\ \ \ \ \ \ \ \textcolor{comment}{//\ NOLINTNEXTLINE(performance-\/unnecessary-\/value-\/param)}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00032}00032\ \ \ \ \ \ \ workers\_.emplace\_back([\textcolor{keyword}{this}](std::stop\_token\ stop\_token)\ -\/>\ \textcolor{keywordtype}{void}\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ worker\_loop(stop\_token);}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00034}00034\ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00035}00035\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00036}00036\ \ \ \}\ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{comment}{//\ Thread\ creation\ may\ fail\ after\ some\ workers\ have\ already\ started.\ Signal}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{comment}{//\ those\ workers\ to\ exit\ before\ allowing\ construction\ to\ fail.\ Join\ them}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{comment}{//\ while\ this\ object's\ synchronization\ state\ is\ still\ alive.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00040}00040\ \ \ \ \ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{shutdown}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00042}00042\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00043}00043\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00045}00045\ \textcolor{keywordtype}{bool}\ ThreadPool::try\_enqueue\_task(ThreadPool::task\_t\ \&\&task)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00046}00046\ \ \ std::lock\_guard\ lock\{mutex\_\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00047}00047\ \ \ \textcolor{keywordflow}{if}\ (is\_shutting\_down\_)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//\ Reject\ submissions\ after\ shutdown\ begins.\ Otherwise\ a\ caller\ could}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{comment}{//\ receive\ a\ future\ for\ work\ that\ will\ never\ execute.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00051}00051\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00053}00053\ \ \ \textcolor{comment}{//\ \`{}std::move\_only\_function`\ is\ used\ instead\ of\ \`{}std::function`\ because}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00054}00054\ \ \ \textcolor{comment}{//\ \`{}std::packaged\_task`\ is\ move-\/only.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00055}00055\ \ \ tasks\_.emplace(std::move(task));}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00056}00056\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00057}00057\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00059}00059\ \textcolor{keywordtype}{bool}\ ThreadPool::try\_enqueue\_task\_and\_notify\_one(ThreadPool::task\_t\ \&\&task)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00060}00060\ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ is\_enqueue\_successful\{try\_enqueue\_task(std::move(task))\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00061}00061\ \ \ \textcolor{keywordflow}{if}\ (is\_enqueue\_successful)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{comment}{//\ One\ newly\ queued\ task\ requires\ waking\ at\ most\ one\ worker.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00063}00063\ \ \ \ \ condition\_.notify\_one();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00064}00064\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00066}00066\ \ \ \textcolor{keywordflow}{return}\ is\_enqueue\_successful;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00069}00069\ std::optional<ThreadPool::task\_t>}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00070}00070\ \textcolor{comment}{//\ NOLINTNEXTLINE(performance-\/unnecessary-\/value-\/param)}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00071}00071\ ThreadPool::try\_wait\_and\_pop\_task(std::stop\_token\ \textcolor{keyword}{const}\ stop\_token)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00072}00072\ \ \ std::unique\_lock\ lock\{mutex\_\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00074}00074\ \ \ \textcolor{comment}{//\ The\ predicate\ protects\ against\ spurious\ wakeups.\ A\ worker\ wakes\ only\ when}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00075}00075\ \ \ \textcolor{comment}{//\ work\ exists\ or\ shutdown\ has\ started.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00076}00076\ \ \ \textcolor{comment}{//\ NOLINTNEXTLINE(performance-\/unnecessary-\/value-\/param)}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00077}00077\ \ \ condition\_.wait(lock,\ stop\_token,\ [\textcolor{keyword}{this}]()\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{return}\ is\_shutting\_down\_\ ||\ !tasks\_.empty();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00079}00079\ \ \ \});}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00080}00080\ \ \ \textcolor{keywordflow}{if}\ (tasks\_.empty())\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{comment}{//\ During\ graceful\ shutdown,\ workers\ continue\ processing\ until\ the\ queue\ is}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{comment}{//\ drained\ empty.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00083}00083\ \ \ \ \ \textcolor{keywordflow}{return}\ std::nullopt;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00084}00084\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00086}00086\ \ \ \textcolor{keyword}{auto}\ task\{std::move(tasks\_.front())\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00087}00087\ \ \ tasks\_.pop();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00089}00089\ \ \ \textcolor{keywordflow}{return}\ task;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00092}00092\ \textcolor{comment}{//\ NOLINTNEXTLINE(performance-\/unnecessary-\/value-\/param)}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00093}00093\ \textcolor{keywordtype}{void}\ ThreadPool::worker\_loop(std::stop\_token\ \textcolor{keyword}{const}\ stop\_token)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00094}00094\ \ \ \textcolor{comment}{//\ Process\ tasks\ as\ long\ as\ they\ are\ or\ will\ be\ available.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00095}00095\ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{auto}\ task\{try\_wait\_and\_pop\_task(stop\_token)\})\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ Execute\ outside\ the\ mutex\ so\ other\ workers\ can\ dequeue\ tasks\ and}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{comment}{//\ submitters\ can\ enqueue\ new\ ones\ concurrently.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00099}00099\ \ \ \ \ \textcolor{comment}{//\ \`{}std::packaged\_task`\ captures\ exceptions\ and\ makes\ them\ observable}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{comment}{//\ through\ the\ corresponding\ future.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00101}00101\ \ \ \ \ (*task)();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00102}00102\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00103}00103\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00105}00105\ \textcolor{keywordtype}{bool}\ ThreadPool::try\_shutdown()\ noexcept\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00106}00106\ \ \ std::lock\_guard\ lock\{mutex\_\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00107}00107\ \ \ \textcolor{keywordflow}{if}\ (is\_shutting\_down\_)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{comment}{//\ \`{}ThreadPool::try\_shutdown()`\ may\ be\ called\ explicitly\ and\ then\ again\ by}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00109}00109\ \ \ \ \ \textcolor{comment}{//\ the\ destructor,\ so\ repeated\ calls\ must\ be\ harmless.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00110}00110\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00111}00111\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00113}00113\ \ \ is\_shutting\_down\_\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00114}00114\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00115}00115\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00117}00117\ \textcolor{keywordtype}{bool}\ ThreadPool::try\_shutdown\_and\_notify\_all()\ noexcept\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00118}00118\ \ \ \textcolor{keyword}{auto}\ \textcolor{keyword}{const}\ is\_shutdown\_request\_successful\{try\_shutdown()\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00119}00119\ \ \ \textcolor{keywordflow}{if}\ (is\_shutdown\_request\_successful)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ Wake\ every\ worker\ so\ idle\ workers\ can\ observe\ the\ stop\ condition.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00121}00121\ \ \ \ \ condition\_.notify\_all();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00122}00122\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00124}00124\ \ \ \textcolor{keywordflow}{return}\ is\_shutdown\_request\_successful;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00125}00125\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00127}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a08b063f415de83cf7f1aea0f17ca8337}{00127}}\ std::size\_t\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a08b063f415de83cf7f1aea0f17ca8337}{ThreadPool::current\_num\_threads}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00128}00128\ \ \ std::lock\_guard\ lock\{mutex\_\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00129}00129\ \ \ \textcolor{keywordflow}{return}\ workers\_.size();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00130}00130\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00132}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{00132}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_af82390658d9f86704817a5fa6ed9a646}{ThreadPool::is\_shutting\_down}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00133}00133\ \ \ std::lock\_guard\ lock\{mutex\_\};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00134}00134\ \ \ \textcolor{keywordflow}{return}\ is\_shutting\_down\_;}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00135}00135\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00137}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{00137}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{ThreadPool::shutdown}}()\ noexcept\ \{\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{shutdown}}(\textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00138}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a749bf6948d8843c7810b95cd31150c82}{00138}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{ThreadPool::shutdown}}(\textcolor{keywordtype}{bool}\ \textcolor{keyword}{const}\ wait)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00139}00139\ \ \ (void)try\_shutdown\_and\_notify\_all();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00140}00140\ \ \ \textcolor{keywordflow}{if}\ (!wait)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00142}00142\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00144}00144\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&worker\ :\ workers\_)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00145}00145\ \ \ \ \ worker.request\_stop();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00146}00146\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00148}00148\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&worker\ :\ workers\_)\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00149}00149\ \ \ \ \ \textcolor{keywordflow}{if}\ (worker.joinable())\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00150}00150\ \ \ \ \ \ \ worker.join();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00151}00151\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00152}00152\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00153}00153\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00155}\doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee}{00155}}\ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_a032b8f2cf6d2900ff6dadc7c9ca63eee}{ThreadPool::\string~ThreadPool}}()\ noexcept\ \{}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00156}00156\ \ \ \textcolor{comment}{//\ Request\ shutdown\ and\ exit\ immediately\ to\ let\ \`{}std::vector`'s\ destructor}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00157}00157\ \ \ \textcolor{comment}{//\ call\ \`{}std::jthread`'s\ destructor\ to\ join\ and\ destroy\ all\ the\ threads.}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00158}00158\ \ \ \doxymbox{\hyperlink{classcrayon_1_1ThreadPool_aaec47ae9bad9b47b3e6b0be50e92fc26}{shutdown}}();}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00159}00159\ \}}
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{thread__pool_8cpp_source_l00161}00161\ \}\ \textcolor{comment}{//\ namespace\ crayon}}
+
+\end{DoxyCode}
