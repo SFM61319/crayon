@@ -10,6 +10,8 @@
 
 #include <crayon/thread_pool.hpp>
 
+#include "detail/thread_context.hpp"
+
 namespace crayon {
 
 std::size_t ThreadPool::available_parallelism() noexcept {
@@ -29,7 +31,14 @@ ThreadPool::ThreadPool(std::size_t num_threads) {
   try {
     for (std::size_t i{0}; i < num_threads; ++i) {
       // NOLINTNEXTLINE(performance-unnecessary-value-param)
-      workers_.emplace_back([this](std::stop_token stop_token) -> void {
+      workers_.emplace_back([this, i](std::stop_token stop_token) -> void {
+        detail::ThreadContext context{
+            .pool = this,
+            .pool_index = i,
+            .stop_token = stop_token,
+        };
+
+        detail::ThreadContextGuard guard{context};
         worker_loop(stop_token);
       });
     }
