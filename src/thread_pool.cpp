@@ -68,7 +68,7 @@ bool ThreadPool::try_enqueue_task_and_notify_one(ThreadPool::task_t &&task) {
 
 std::optional<ThreadPool::task_t>
 // NOLINTNEXTLINE(performance-unnecessary-value-param)
-ThreadPool::try_wait_and_pop_task(std::stop_token const stop_token) {
+ThreadPool::try_wait_and_pop_task(std::stop_token stop_token) {
   std::unique_lock lock{mutex_};
 
   // The predicate protects against spurious wakeups. A worker wakes only when
@@ -90,7 +90,7 @@ ThreadPool::try_wait_and_pop_task(std::stop_token const stop_token) {
 }
 
 // NOLINTNEXTLINE(performance-unnecessary-value-param)
-void ThreadPool::worker_loop(std::stop_token const stop_token) {
+void ThreadPool::worker_loop(std::stop_token stop_token) {
   // Process tasks as long as they are or will be available.
   while (auto task{try_wait_and_pop_task(stop_token)}) {
     // Execute outside the mutex so other workers can dequeue tasks and
@@ -115,13 +115,17 @@ bool ThreadPool::try_shutdown() noexcept {
 }
 
 bool ThreadPool::try_shutdown_and_notify_all() noexcept {
-  auto const is_shutdown_request_successful{try_shutdown()};
-  if (is_shutdown_request_successful) {
-    // Wake every worker so idle workers can observe the stop condition.
-    condition_.notify_all();
+  if (!try_shutdown()) {
+    return false;
   }
 
-  return is_shutdown_request_successful;
+  // Wake every worker so idle workers can observe the stop condition.
+  for (auto &worker : workers_) {
+    worker.request_stop();
+  }
+
+  condition_.notify_all();
+  return true;
 }
 
 std::size_t ThreadPool::current_num_threads() const {
@@ -139,10 +143,6 @@ void ThreadPool::shutdown(bool const wait) noexcept {
   (void)try_shutdown_and_notify_all();
   if (!wait) {
     return;
-  }
-
-  for (auto &worker : workers_) {
-    worker.request_stop();
   }
 
   for (auto &worker : workers_) {

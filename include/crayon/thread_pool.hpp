@@ -104,9 +104,9 @@ public:
   /// @cond
   // A ThreadPool cannot safely be copied or moved because its worker threads
   // reference synchronization state owned by this specific object.
-  ThreadPool(const ThreadPool &) = delete;
+  ThreadPool(ThreadPool const &) = delete;
   ThreadPool(ThreadPool &&) = delete;
-  ThreadPool &operator=(const ThreadPool &) = delete;
+  ThreadPool &operator=(ThreadPool const &) = delete;
   ThreadPool &operator=(ThreadPool &&) = delete;
   /// @endcond
 
